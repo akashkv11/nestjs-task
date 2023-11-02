@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from './interfaces/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { createHash } from 'src/utils/bcrypt';
 
 
 @Injectable()
@@ -20,14 +21,15 @@ export class UsersService {
   }
 
   async createUser(user: User): Promise<User | string> {
-    const newUser = new this.userModel(user);
+    const password = createHash(user.password)
+    
+    const newUser = new this.userModel({...user,password});
 
     try {
       const result = await newUser.save();
       return result;
     } catch (error) {
-      console.log(error);
-      return 'This email already exists';
+      return `This ${Object.keys(error.keyValue)} already exists`;
     }
   }
   async deleteUser(id: string): Promise<User> {
