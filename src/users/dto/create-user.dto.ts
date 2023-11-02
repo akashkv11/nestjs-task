@@ -5,8 +5,6 @@ import {
   Min,
   Max,
   Length,
-  min,
-  max,
   IsNotEmpty,
   ValidateNested,
 } from 'class-validator';
@@ -17,7 +15,7 @@ export default class CreateUserDto {
   // readonly _id: string;
 
   @IsString()
-  readonly name: string;
+  readonly username: string;
 
   @IsEmail()
   readonly email: string;

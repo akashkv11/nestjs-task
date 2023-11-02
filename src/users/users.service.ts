@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { User } from './interfaces/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { resourceLimits } from 'worker_threads';
-import { log } from 'console';
+
+
 @Injectable()
 export class UsersService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
@@ -12,8 +12,11 @@ export class UsersService {
     return await this.userModel.find();
   }
 
-  async getOne(id: string): Promise<User> {
+  async getOneWithId(id: string): Promise<User> {
     return await this.userModel.findOne({ _id: id });
+  }
+  async getOneWithUsername(username: string): Promise<User> {
+    return await this.userModel.findOne({ username: username });
   }
 
   async createUser(user: User): Promise<User | string> {
@@ -23,6 +26,7 @@ export class UsersService {
       const result = await newUser.save();
       return result;
     } catch (error) {
+      console.log(error);
       return 'This email already exists';
     }
   }
